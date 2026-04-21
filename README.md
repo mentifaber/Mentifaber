@@ -1,4 +1,4 @@
-# THE Mentifaber
+# Mentifaber
 
 Builder of persistent systems. Architect of continuity.
 
