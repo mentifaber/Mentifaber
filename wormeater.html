@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Worm Crawler — an ingredient scanner that doesn't flatter the label</title>
+<title>Worm Eater — an ingredient scanner that doesn't flatter the label</title>
+<meta name="description" content="Worm Eater — an ingredient scanner that says 'I don't know' when it doesn't know. 225 ingredients, 1,014 aliases, every deduction itemised."/>
+<meta property="og:title" content="Worm Eater"/>
+<meta property="og:description" content="An ingredient scanner that says 'I don't know' when it doesn't know."/>
+<meta name="theme-color" content="#0C120D"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Syncopate:wght@400;700&family=EB+Garamond:ital,wght@0,400;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -108,6 +112,25 @@ footer{padding:100px 24px 80px}footer p{color:var(--dim);font-size:14.5px;max-wi
 h1,h2{font-family:'Playfair Display',serif!important;font-style:italic;}
 .eyebrow{font-family:'Syncopate',sans-serif!important;font-weight:400;}
 body{cursor:crosshair;}
+
+/* ── motion + media (shared) ── */
+.reveal { opacity: 0; transform: translateY(18px);
+  transition: opacity .9s cubic-bezier(.2,.7,.3,1), transform .9s cubic-bezier(.2,.7,.3,1); }
+.reveal.in { opacity: 1; transform: none; }
+.reveal.d1 { transition-delay: .07s; } .reveal.d2 { transition-delay: .14s; } .reveal.d3 { transition-delay: .21s; }
+.shot { margin: 3.6rem 0 0; }
+.shot img { width: 100%; display: block; background: #050403;
+  border: 1px solid rgba(200,169,110,.18); box-shadow: 0 18px 60px rgba(0,0,0,.75);
+  transition: border-color .5s ease, box-shadow .5s ease; }
+.shot:hover img { border-color: rgba(200,169,110,.4); box-shadow: 0 18px 70px rgba(0,0,0,.9), 0 0 40px rgba(200,169,110,.06); }
+.shot figcaption { margin-top: .95rem; font-family: 'EB Garamond', serif; font-style: italic;
+  font-size: .92rem; color: var(--nav); text-align: center; letter-spacing: .03em; }
+.shot-pair { display: grid; grid-template-columns: 1.55fr 1fr; gap: 1.3rem; align-items: start; }
+.shot-pair .shot { margin-top: 0; }
+@media (max-width: 700px) { .shot-pair { grid-template-columns: 1fr; gap: 2.2rem; } }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
 </style></head><body>
 <div class="mf-grain"></div>
 <div class="mf-vignette"></div>
@@ -125,9 +148,9 @@ body{cursor:crosshair;}
     <circle cx="84.5" cy="29.5" r="1.9" fill="#0C120D"/>
     <path d="M14 78 h72" stroke="#36492F" stroke-width="3" stroke-linecap="round"/>
   </svg>
-  <h1>Worm <em>Crawler</em></h1>
-  <p class="tag">A food ingredient scanner that says <b>"I don't know"</b> when it doesn't know, instead of quietly scoring it as fine.</p>
-  <div class="meta">v6 · formerly "Yuka But Honest" · Open Food Facts</div>
+  <h1>Worm <em>Eater</em></h1>
+  <p class="tag">An ingredient scanner that says <b>"I don't know"</b> when it doesn't know, instead of quietly scoring it as fine.</p>
+  <div class="meta">225 ingredients · 1,014 aliases · Open Food Facts · formerly "Yuka But Honest," then "Worm Crawler"</div>
 
   <div class="scan">
     <div class="pick" id="pick"></div>
@@ -147,10 +170,34 @@ body{cursor:crosshair;}
   <h2>The honest part is the <em>unknowns</em></h2>
   <p class="lede">Every scanner app gives a number. The number is only meaningful if you know how much of the label it actually understood. Tap any ingredient above to see why it landed where it did — including the ones marked unclassified, which is the whole point of the rebuild.</p>
   <div class="grid">
-    <div class="card"><h4>Classified</h4><p>Matched against the ingredient table with a rating and a stated reason. These are the ones the score can honestly stand on.</p></div>
-    <div class="card"><h4>Unclassified</h4><p>Present on the label, absent from the table. Surfaced explicitly rather than <b>silently treated as neutral</b> — which is how a mystery additive becomes a good score.</p></div>
-    <div class="card"><h4>AI classify</h4><p>An escape hatch for the unclassified ones: send the raw ingredient string to a model and get a provisional read, clearly marked as provisional.</p></div>
-    <div class="card"><h4>Coverage number</h4><p>What fraction of the label was understood. A 78/100 across four of eleven ingredients is a different claim than 78/100 across eleven of eleven.</p></div>
+    <div class="card reveal"><h4>Classified</h4><p>Matched against the ingredient table with a rating and a stated reason. These are the ones the score can honestly stand on.</p></div>
+    <div class="card reveal d1"><h4>Unclassified</h4><p>Present on the label, absent from the table. Surfaced explicitly rather than <b>silently treated as neutral</b> — which is how a mystery additive becomes a good score.</p></div>
+    <div class="card reveal d2"><h4>AI classify</h4><p>An escape hatch for the unclassified ones: send the raw ingredient string to a model and get a provisional read, clearly marked as provisional.</p></div>
+    <div class="card reveal d3"><h4>Coverage number</h4><p>What fraction of the label was understood. A 78/100 across four of eleven ingredients is a different claim than 78/100 across eleven of eleven.</p></div>
+  </div>
+</section>
+
+<div class="gap"><i></i></div>
+
+<section class="wide rv">
+  <div class="eyebrow">The build</div>
+  <h2>What a real scan <em>looks like</em></h2>
+  <p class="lede">Hawaiian Punch Fruit Juicy Red, pasted straight off the label. Fourteen ingredients in, eleven flagged, and a score of zero — next to Yuka's estimate of twelve for the same product.</p>
+  <div class="shot-pair">
+    <figure class="shot reveal">
+      <img src="screenshots/wormeater-wide.png" alt="Worm Eater verdict screen showing a score of 0 out of 100, the INFESTED rating, and the flagged ingredient crawl beneath it." loading="lazy"/>
+      <figcaption>The verdict, and every deduction that produced it.</figcaption>
+    </figure>
+    <figure class="shot reveal d1">
+      <img src="screenshots/wormeater-phone.png" alt="Worm Eater on a phone: score, INFESTED badge, Yuka comparison, pregnancy safety toggle, and per-ingredient evidence ratings." loading="lazy"/>
+      <figcaption>Built phone-first. The label is read standing in an aisle.</figcaption>
+    </figure>
+  </div>
+  <div class="grid" style="margin-top:2.6rem">
+    <div class="card reveal"><h4>Every point is itemised</h4><p>High fructose corn syrup, &minus;32. Acesulfame potassium, &minus;22. Sucralose, &minus;24. The score is not a verdict handed down — it is <b>arithmetic you can audit</b> line by line.</p></div>
+    <div class="card reveal d1"><h4>Evidence is graded</h4><p>Each entry carries its own confidence — <em>strong evidence</em>, <em>emerging evidence</em> — alongside the caveat that matters: a WHO ADI figure, or "no safe lower bound confirmed," or "dose-dependent."</p></div>
+    <div class="card reveal d2"><h4>Pregnancy safety mode</h4><p>A toggle that re-scores the same label against a stricter table. The thresholds that shift are the ones where pregnancy actually changes the answer.</p></div>
+    <div class="card reveal d3"><h4>Not only food</h4><p>Cosmetics, shampoo, supplements. The parser never cared whether a label was edible — that was an assumption in the name, not the code.</p></div>
   </div>
 </section>
 
@@ -161,10 +208,10 @@ body{cursor:crosshair;}
   <h2>Two things that are <em>still wrong</em></h2>
   <p class="lede">Both live in <code>findAlternatives()</code>, and both trace back to the same root cause: trusting that upstream data is complete.</p>
   <div class="grid">
-    <div class="card open"><h4>Bug 1 — self-substitution</h4><p>The recommended-substitute feature sometimes returns <b>the scanned product as its own alternative</b>. No identity check on the candidate set before ranking.</p></div>
-    <div class="card open"><h4>Bug 2 — truncated data</h4><p>Open Food Facts returns <b>truncated ingredient lists</b> for some products. A short list looks like a clean product, so substitute scoring ranks incomplete entries above complete ones.</p></div>
-    <div class="card"><h4>Why they're linked</h4><p>Both are the scorer treating absence as good news. The same instinct the app exists to argue against, reproduced inside the app.</p></div>
-    <div class="card"><h4>The shape of the fix</h4><p>Exclude the source barcode from the candidate pool, and gate any substitute below a coverage floor out of the ranking entirely.</p></div>
+    <div class="card open reveal"><h4>Bug 1 — self-substitution</h4><p>The recommended-substitute feature sometimes returns <b>the scanned product as its own alternative</b>. No identity check on the candidate set before ranking.</p></div>
+    <div class="card open reveal d1"><h4>Bug 2 — truncated data</h4><p>Open Food Facts returns <b>truncated ingredient lists</b> for some products. A short list looks like a clean product, so substitute scoring ranks incomplete entries above complete ones.</p></div>
+    <div class="card reveal d2"><h4>Why they're linked</h4><p>Both are the scorer treating absence as good news. The same instinct the app exists to argue against, reproduced inside the app.</p></div>
+    <div class="card reveal d3"><h4>The shape of the fix</h4><p>Exclude the source barcode from the candidate pool, and gate any substitute below a coverage floor out of the ranking entirely.</p></div>
   </div>
   <p class="aside">The scanner card above demonstrates the self-substitution bug on the last sample — it is showing you the real failure rather than a cleaned-up version of it.</p>
 </section>
@@ -172,20 +219,20 @@ body{cursor:crosshair;}
 <div class="gap"><i></i></div>
 
 <section class="wide rv">
-  <div class="eyebrow">v6</div>
+  <div class="eyebrow">The name</div>
   <h2>Moss green and a <em>worm</em></h2>
-  <p class="lede">The rebrand from "Yuka But Honest" mattered more than a rename usually does. The old name defined the product as a critique of another product.</p>
+  <p class="lede">Two renames, and the first one mattered more than a rename usually does. "Yuka But Honest" defined the product as a critique of another product — a ceiling, not a direction. "Worm Crawler" fixed that but described the mechanism. "Worm Eater" describes what it does to the label.</p>
   <div class="grid">
-    <div class="card"><h4>Palette</h4><p>Earthy moss green throughout — soil, lichen, rust. Nothing about it reads as a clinical health app, because that framing implies an authority the data doesn't support.</p></div>
-    <div class="card"><h4>Logo</h4><p>A custom SVG worm, drawn as a single stroke path. It's above this page's title — same file, no raster fallback.</p></div>
-    <div class="card"><h4>Name</h4><p>A crawler that goes through what's underneath. Also literally a worm in soil, which is the joke.</p></div>
-    <div class="card"><h4>Data source</h4><p><b>Open Food Facts</b> — open, community-maintained, and uneven in exactly the ways the app now surfaces instead of hiding.</p></div>
+    <div class="card reveal"><h4>Palette</h4><p>Earthy moss green throughout — soil, lichen, rust. Nothing about it reads as a clinical health app, because that framing implies an authority the data doesn't support.</p></div>
+    <div class="card reveal d1"><h4>Logo</h4><p>A custom SVG worm, drawn as a single stroke path. It's above this page's title — same file, no raster fallback.</p></div>
+    <div class="card reveal d2"><h4>Name</h4><p>Something that goes through what's underneath and leaves the soil better. Also literally a worm in an apple, which is the joke.</p></div>
+    <div class="card reveal d3"><h4>Data source</h4><p><b>Open Food Facts</b> — open, community-maintained, and uneven in exactly the ways the app now surfaces instead of hiding. Unknowns route to <b>Groq</b> for a provisional read, marked as provisional.</p></div>
   </div>
 </section>
 
 <footer>
-  <div class="eyebrow">v6 · two open bugs · shipping anyway</div>
-  <p>Sample products above are illustrative. The scoring logic, the unclassified handling and both bugs are the real ones.</p>
+  <div class="eyebrow">225 ingredients · two open bugs · shipping anyway</div>
+  <p>Sample products in the card above are illustrative. The scoring logic, the unclassified handling, the screenshots and both bugs are the real ones.</p>
 </footer>
 
 <script>
@@ -285,6 +332,22 @@ document.querySelectorAll('.rv,.gap').forEach(e=>io.observe(e));
   if(touch){g.style.display='none';return}
   addEventListener('mousemove',function(e){tx=e.clientX;ty=e.clientY});
   (function loop(){cx+=(tx-cx)*.09;cy+=(ty-cy)*.09;g.style.left=cx+'px';g.style.top=cy+'px';requestAnimationFrame(loop)})();
+})();
+
+/* scroll reveal — shared */
+(function () {
+  var els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
+  if (!('IntersectionObserver' in window)) {
+    for (var i = 0; i < els.length; i++) els[i].classList.add('in');
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  els.forEach(function (e) { io.observe(e); });
 })();
 </script>
 </body></html>

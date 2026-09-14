@@ -102,6 +102,25 @@ footer{padding:100px 24px 80px}footer p{color:var(--dim);font-size:15px;max-widt
 h1,h2{font-family:'Playfair Display',serif!important;font-style:italic;}
 .eyebrow{font-family:'Syncopate',sans-serif!important;font-weight:400;}
 body{cursor:crosshair;}
+
+/* ── motion + media (shared) ── */
+.reveal { opacity: 0; transform: translateY(18px);
+  transition: opacity .9s cubic-bezier(.2,.7,.3,1), transform .9s cubic-bezier(.2,.7,.3,1); }
+.reveal.in { opacity: 1; transform: none; }
+.reveal.d1 { transition-delay: .07s; } .reveal.d2 { transition-delay: .14s; } .reveal.d3 { transition-delay: .21s; }
+.shot { margin: 3.6rem 0 0; }
+.shot img { width: 100%; display: block; background: #050403;
+  border: 1px solid rgba(200,169,110,.18); box-shadow: 0 18px 60px rgba(0,0,0,.75);
+  transition: border-color .5s ease, box-shadow .5s ease; }
+.shot:hover img { border-color: rgba(200,169,110,.4); box-shadow: 0 18px 70px rgba(0,0,0,.9), 0 0 40px rgba(200,169,110,.06); }
+.shot figcaption { margin-top: .95rem; font-family: 'EB Garamond', serif; font-style: italic;
+  font-size: .92rem; color: var(--nav); text-align: center; letter-spacing: .03em; }
+.shot-pair { display: grid; grid-template-columns: 1.55fr 1fr; gap: 1.3rem; align-items: start; }
+.shot-pair .shot { margin-top: 0; }
+@media (max-width: 700px) { .shot-pair { grid-template-columns: 1fr; gap: 2.2rem; } }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
 </style></head><body>
 <div class="mf-grain"></div>
 <div class="mf-vignette"></div>
@@ -146,10 +165,10 @@ body{cursor:crosshair;}
   <h2>One file, <em>handed to a friend</em></h2>
   <p class="lede">The brief was a dashboard someone non-technical could actually open. That ruled out a build step, a package manager, a backend, and any hosting decision at all.</p>
   <div class="grid">
-    <div class="card"><h4>Delivery</h4><p>A <b>single .html</b>. Double-click it. Works from a USB stick, an email attachment, or a folder on a desktop.</p></div>
-    <div class="card"><h4>Mapping</h4><p>Leaflet from a CDN with tiles fetched live — the one thing that needs a connection, and it degrades to the ranked tables without it.</p></div>
-    <div class="card"><h4>Data</h4><p>FBI reporting, <b>baked into the file</b> as a JSON literal. No fetch, no CORS, no API key to expire.</p></div>
-    <div class="card"><h4>Interaction</h4><p>A sortable, filterable sidebar with colour-coded safety markers on the map. All state in memory — nothing to persist, nothing to configure.</p></div>
+    <div class="card reveal"><h4>Delivery</h4><p>A <b>single .html</b>. Double-click it. Works from a USB stick, an email attachment, or a folder on a desktop.</p></div>
+    <div class="card reveal d1"><h4>Mapping</h4><p>Leaflet from a CDN with tiles fetched live — the one thing that needs a connection, and it degrades to the ranked tables without it.</p></div>
+    <div class="card reveal d2"><h4>Data</h4><p>FBI reporting, <b>baked into the file</b> as a JSON literal. No fetch, no CORS, no API key to expire.</p></div>
+    <div class="card reveal d3"><h4>Interaction</h4><p>A sortable, filterable sidebar with colour-coded safety markers on the map. All state in memory — nothing to persist, nothing to configure.</p></div>
   </div>
 </section>
 
@@ -159,10 +178,10 @@ body{cursor:crosshair;}
   <div class="eyebrow">Caveats it states out loud</div>
   <h2>The data has <em>seams</em></h2>
   <div class="grid">
-    <div class="card"><h4>Voluntary reporting</h4><p>Agencies opt in. A city that looks safe may simply have <b>reported less completely</b> that year.</p></div>
-    <div class="card"><h4>Definition drift</h4><p>Category boundaries shift between reporting standards, so long time series aren't clean comparisons.</p></div>
-    <div class="card"><h4>City limits ≠ metro</h4><p>Municipal boundaries carve metro areas arbitrarily. Two cities of the same name-recognition can cover wildly different footprints.</p></div>
-    <div class="card"><h4>Small denominators</h4><p>In smaller cities a handful of incidents swings the per-capita rate hard. Rank order at the bottom is <b>noise, not signal</b>.</p></div>
+    <div class="card reveal"><h4>Voluntary reporting</h4><p>Agencies opt in. A city that looks safe may simply have <b>reported less completely</b> that year.</p></div>
+    <div class="card reveal d1"><h4>Definition drift</h4><p>Category boundaries shift between reporting standards, so long time series aren't clean comparisons.</p></div>
+    <div class="card reveal d2"><h4>City limits ≠ metro</h4><p>Municipal boundaries carve metro areas arbitrarily. Two cities of the same name-recognition can cover wildly different footprints.</p></div>
+    <div class="card reveal d3"><h4>Small denominators</h4><p>In smaller cities a handful of incidents swings the per-capita rate hard. Rank order at the bottom is <b>noise, not signal</b>.</p></div>
   </div>
   <p class="aside">A dashboard that hides these makes people confident about things they shouldn't be. This one puts them in the interface, not in a footnote nobody scrolls to.</p>
 </section>
@@ -312,6 +331,22 @@ document.querySelectorAll('.rv,.gap').forEach(e=>io.observe(e));
   if(touch){g.style.display='none';return}
   addEventListener('mousemove',function(e){tx=e.clientX;ty=e.clientY});
   (function loop(){cx+=(tx-cx)*.09;cy+=(ty-cy)*.09;g.style.left=cx+'px';g.style.top=cy+'px';requestAnimationFrame(loop)})();
+})();
+
+/* scroll reveal — shared */
+(function () {
+  var els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
+  if (!('IntersectionObserver' in window)) {
+    for (var i = 0; i < els.length; i++) els[i].classList.add('in');
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  els.forEach(function (e) { io.observe(e); });
 })();
 </script>
 </body></html>

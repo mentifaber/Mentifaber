@@ -109,6 +109,25 @@ footer{padding:100px 24px 80px}footer p{color:var(--dim);font-size:14.5px;max-wi
 h1,h2{font-family:'Playfair Display',serif!important;font-style:italic;}
 .eyebrow{font-family:'Syncopate',sans-serif!important;font-weight:400;}
 body{cursor:crosshair;}
+
+/* ── motion + media (shared) ── */
+.reveal { opacity: 0; transform: translateY(18px);
+  transition: opacity .9s cubic-bezier(.2,.7,.3,1), transform .9s cubic-bezier(.2,.7,.3,1); }
+.reveal.in { opacity: 1; transform: none; }
+.reveal.d1 { transition-delay: .07s; } .reveal.d2 { transition-delay: .14s; } .reveal.d3 { transition-delay: .21s; }
+.shot { margin: 3.6rem 0 0; }
+.shot img { width: 100%; display: block; background: #050403;
+  border: 1px solid rgba(200,169,110,.18); box-shadow: 0 18px 60px rgba(0,0,0,.75);
+  transition: border-color .5s ease, box-shadow .5s ease; }
+.shot:hover img { border-color: rgba(200,169,110,.4); box-shadow: 0 18px 70px rgba(0,0,0,.9), 0 0 40px rgba(200,169,110,.06); }
+.shot figcaption { margin-top: .95rem; font-family: 'EB Garamond', serif; font-style: italic;
+  font-size: .92rem; color: var(--nav); text-align: center; letter-spacing: .03em; }
+.shot-pair { display: grid; grid-template-columns: 1.55fr 1fr; gap: 1.3rem; align-items: start; }
+.shot-pair .shot { margin-top: 0; }
+@media (max-width: 700px) { .shot-pair { grid-template-columns: 1fr; gap: 2.2rem; } }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
 </style></head><body>
 <div class="mf-grain"></div>
 <div class="mf-vignette"></div>
@@ -160,10 +179,10 @@ body{cursor:crosshair;}
   <h2>One file, <em>zero trust in me</em></h2>
   <p class="lede">Every design decision follows from a single rule: someone should be able to read the whole thing before using it, and verify there's nothing else in it.</p>
   <div class="grid">
-    <div class="card"><h4>No dependencies</h4><p>No npm tree, no CDN, no crypto library to audit. <b>Web Crypto is the browser's</b>, already reviewed by people better at this than either of us.</p></div>
-    <div class="card"><h4>No network</h4><p>Nothing is fetched and nothing is posted. Open devtools, watch the network tab stay empty, and you've verified the core claim yourself.</p></div>
-    <div class="card"><h4>No storage</h4><p>Keys live in memory for the tab's lifetime. Close it and they're gone — which is a feature and an obvious footgun at the same time.</p></div>
-    <div class="card"><h4>Readable</h4><p>One file you can scroll to the bottom of. That's the entire security argument, and it only works if it stays small.</p></div>
+    <div class="card reveal"><h4>No dependencies</h4><p>No npm tree, no CDN, no crypto library to audit. <b>Web Crypto is the browser's</b>, already reviewed by people better at this than either of us.</p></div>
+    <div class="card reveal d1"><h4>No network</h4><p>Nothing is fetched and nothing is posted. Open devtools, watch the network tab stay empty, and you've verified the core claim yourself.</p></div>
+    <div class="card reveal d2"><h4>No storage</h4><p>Keys live in memory for the tab's lifetime. Close it and they're gone — which is a feature and an obvious footgun at the same time.</p></div>
+    <div class="card reveal d3"><h4>Readable</h4><p>One file you can scroll to the bottom of. That's the entire security argument, and it only works if it stays small.</p></div>
   </div>
 </section>
 
@@ -173,10 +192,10 @@ body{cursor:crosshair;}
   <div class="eyebrow">Honest limits</div>
   <h2>What this <em>doesn't</em> do</h2>
   <div class="grid">
-    <div class="card warn"><h4>No key distribution</h4><p>Getting a public key to the other person safely is <b>the actual hard problem</b> in all of cryptography, and this file doesn't touch it.</p></div>
-    <div class="card warn"><h4>No identity</h4><p>Encryption proves nobody else can read it. It does not prove <b>who sent it</b>. That needs signatures, which is a separate mechanism.</p></div>
-    <div class="card warn"><h4>Delivery is the weak point</h4><p>If the page is served over the network, whoever serves it can change it. Local file or nothing.</p></div>
-    <div class="card warn"><h4>Not a replacement</h4><p>For anything that genuinely matters, <b>use age or GPG</b>. This is a working demonstration of the primitives, not audited infrastructure.</p></div>
+    <div class="card warn reveal"><h4>No key distribution</h4><p>Getting a public key to the other person safely is <b>the actual hard problem</b> in all of cryptography, and this file doesn't touch it.</p></div>
+    <div class="card warn reveal d1"><h4>No identity</h4><p>Encryption proves nobody else can read it. It does not prove <b>who sent it</b>. That needs signatures, which is a separate mechanism.</p></div>
+    <div class="card warn reveal d2"><h4>Delivery is the weak point</h4><p>If the page is served over the network, whoever serves it can change it. Local file or nothing.</p></div>
+    <div class="card warn reveal d3"><h4>Not a replacement</h4><p>For anything that genuinely matters, <b>use age or GPG</b>. This is a working demonstration of the primitives, not audited infrastructure.</p></div>
   </div>
   <p class="aside">A crypto tool that overstates itself is worse than no tool. The limits above belong in the interface, not in a README nobody opens.</p>
 </section>
@@ -270,6 +289,22 @@ document.querySelectorAll('.rv,.gap').forEach(e=>io.observe(e));
   if(touch){g.style.display='none';return}
   addEventListener('mousemove',function(e){tx=e.clientX;ty=e.clientY});
   (function loop(){cx+=(tx-cx)*.09;cy+=(ty-cy)*.09;g.style.left=cx+'px';g.style.top=cy+'px';requestAnimationFrame(loop)})();
+})();
+
+/* scroll reveal — shared */
+(function () {
+  var els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
+  if (!('IntersectionObserver' in window)) {
+    for (var i = 0; i < els.length; i++) els[i].classList.add('in');
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  els.forEach(function (e) { io.observe(e); });
 })();
 </script>
 </body></html>

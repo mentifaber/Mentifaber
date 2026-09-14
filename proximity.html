@@ -116,6 +116,25 @@ footer{padding:100px 24px 80px}footer p{color:var(--dim);font-size:14.5px;max-wi
 h1,h2{font-family:'Playfair Display',serif!important;font-style:italic;}
 .eyebrow{font-family:'Syncopate',sans-serif!important;font-weight:400;}
 body{cursor:crosshair;}
+
+/* ── motion + media (shared) ── */
+.reveal { opacity: 0; transform: translateY(18px);
+  transition: opacity .9s cubic-bezier(.2,.7,.3,1), transform .9s cubic-bezier(.2,.7,.3,1); }
+.reveal.in { opacity: 1; transform: none; }
+.reveal.d1 { transition-delay: .07s; } .reveal.d2 { transition-delay: .14s; } .reveal.d3 { transition-delay: .21s; }
+.shot { margin: 3.6rem 0 0; }
+.shot img { width: 100%; display: block; background: #050403;
+  border: 1px solid rgba(200,169,110,.18); box-shadow: 0 18px 60px rgba(0,0,0,.75);
+  transition: border-color .5s ease, box-shadow .5s ease; }
+.shot:hover img { border-color: rgba(200,169,110,.4); box-shadow: 0 18px 70px rgba(0,0,0,.9), 0 0 40px rgba(200,169,110,.06); }
+.shot figcaption { margin-top: .95rem; font-family: 'EB Garamond', serif; font-style: italic;
+  font-size: .92rem; color: var(--nav); text-align: center; letter-spacing: .03em; }
+.shot-pair { display: grid; grid-template-columns: 1.55fr 1fr; gap: 1.3rem; align-items: start; }
+.shot-pair .shot { margin-top: 0; }
+@media (max-width: 700px) { .shot-pair { grid-template-columns: 1fr; gap: 2.2rem; } }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
 </style></head><body>
 <div class="mf-grain"></div>
 <div class="mf-vignette"></div>
@@ -159,8 +178,8 @@ body{cursor:crosshair;}
   <h2>The first architecture was <em>solving the wrong problem</em></h2>
   <p class="lede">It treated RSSI as a location fingerprint for the scanner's own position — which room is the laptop in. That's a solved and useless question when the laptop never moves.</p>
   <div class="grid">
-    <div class="card wrong"><h4>Original model</h4><p>Fingerprint the receiver. Walk the house, label rooms, classify live readings with KNN. Answers <b>"where am I"</b> — for a machine sitting on a desk.</p></div>
-    <div class="card right"><h4>Corrected model</h4><p>The scanner is fixed. Detect <b>someone else</b> by how their body perturbs the ambient field. The dot tracks the most disturbed zone, not the receiver.</p></div>
+    <div class="card wrong reveal"><h4>Original model</h4><p>Fingerprint the receiver. Walk the house, label rooms, classify live readings with KNN. Answers <b>"where am I"</b> — for a machine sitting on a desk.</p></div>
+    <div class="card right reveal d1"><h4>Corrected model</h4><p>The scanner is fixed. Detect <b>someone else</b> by how their body perturbs the ambient field. The dot tracks the most disturbed zone, not the receiver.</p></div>
   </div>
 
   <div class="steps">
@@ -177,12 +196,12 @@ body{cursor:crosshair;}
   <div class="eyebrow">Honest limits</div>
   <h2>Single-router RSSI is <em>noisy as hell</em></h2>
   <div class="grid">
-    <div class="card"><h4>What works</h4><p>Presence and motion detection are reliable. Room-level zoning works after calibration. Path tracking is a sequence of transitions.</p></div>
-    <div class="card"><h4>What doesn't</h4><p>Sub-room positioning. Counting people. Anything through more than a couple of interior walls without a second AP in the geometry.</p></div>
-    <div class="card"><h4>The upgrade path</h4><p><b>CSI</b> — per-subcarrier phase and amplitude — is sensitive enough to detect breathing, but needs a card with an exposed CSI driver.</p></div>
-    <div class="card"><h4>The other path</h4><p><b>802.11mc FTM</b> gives real round-trip distance instead of inferred attenuation, if the router supports it.</p></div>
-    <div class="card"><h4>Bugs that cost real time</h4><p>An <code>asyncio.Lock()</code> constructed <b>outside the event loop</b>, and a deprecated <code>@app.on_event</code> startup hook.</p></div>
-    <div class="card"><h4>The dumbest one</h4><p>The Windows batch launcher died on a folder path containing <b>spaces and a trailing backslash</b>. Nothing to do with RF at all.</p></div>
+    <div class="card reveal d2"><h4>What works</h4><p>Presence and motion detection are reliable. Room-level zoning works after calibration. Path tracking is a sequence of transitions.</p></div>
+    <div class="card reveal d3"><h4>What doesn't</h4><p>Sub-room positioning. Counting people. Anything through more than a couple of interior walls without a second AP in the geometry.</p></div>
+    <div class="card reveal"><h4>The upgrade path</h4><p><b>CSI</b> — per-subcarrier phase and amplitude — is sensitive enough to detect breathing, but needs a card with an exposed CSI driver.</p></div>
+    <div class="card reveal d1"><h4>The other path</h4><p><b>802.11mc FTM</b> gives real round-trip distance instead of inferred attenuation, if the router supports it.</p></div>
+    <div class="card reveal d2"><h4>Bugs that cost real time</h4><p>An <code>asyncio.Lock()</code> constructed <b>outside the event loop</b>, and a deprecated <code>@app.on_event</code> startup hook.</p></div>
+    <div class="card reveal d3"><h4>The dumbest one</h4><p>The Windows batch launcher died on a folder path containing <b>spaces and a trailing backslash</b>. Nothing to do with RF at all.</p></div>
   </div>
   <p class="aside">Windows-side scanning goes through <code>netsh</code>, which caps the poll rate and quietly caches results. That ceiling is the real constraint on temporal resolution, not the physics.</p>
 </section>
@@ -335,6 +354,22 @@ document.querySelectorAll('.rv,.gap').forEach(e=>io.observe(e));
   if(touch){g.style.display='none';return}
   addEventListener('mousemove',function(e){tx=e.clientX;ty=e.clientY});
   (function loop(){cx+=(tx-cx)*.09;cy+=(ty-cy)*.09;g.style.left=cx+'px';g.style.top=cy+'px';requestAnimationFrame(loop)})();
+})();
+
+/* scroll reveal — shared */
+(function () {
+  var els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
+  if (!('IntersectionObserver' in window)) {
+    for (var i = 0; i < els.length; i++) els[i].classList.add('in');
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  els.forEach(function (e) { io.observe(e); });
 })();
 </script>
 </body></html>

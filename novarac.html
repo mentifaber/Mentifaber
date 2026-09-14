@@ -112,6 +112,25 @@ footer{padding:100px 24px 80px}footer p{color:var(--dim);font-size:14.5px;max-wi
 h1,h2{font-family:'Playfair Display',serif!important;font-style:italic;}
 .eyebrow{font-family:'Syncopate',sans-serif!important;font-weight:400;}
 body{cursor:crosshair;}
+
+/* ── motion + media (shared) ── */
+.reveal { opacity: 0; transform: translateY(18px);
+  transition: opacity .9s cubic-bezier(.2,.7,.3,1), transform .9s cubic-bezier(.2,.7,.3,1); }
+.reveal.in { opacity: 1; transform: none; }
+.reveal.d1 { transition-delay: .07s; } .reveal.d2 { transition-delay: .14s; } .reveal.d3 { transition-delay: .21s; }
+.shot { margin: 3.6rem 0 0; }
+.shot img { width: 100%; display: block; background: #050403;
+  border: 1px solid rgba(200,169,110,.18); box-shadow: 0 18px 60px rgba(0,0,0,.75);
+  transition: border-color .5s ease, box-shadow .5s ease; }
+.shot:hover img { border-color: rgba(200,169,110,.4); box-shadow: 0 18px 70px rgba(0,0,0,.9), 0 0 40px rgba(200,169,110,.06); }
+.shot figcaption { margin-top: .95rem; font-family: 'EB Garamond', serif; font-style: italic;
+  font-size: .92rem; color: var(--nav); text-align: center; letter-spacing: .03em; }
+.shot-pair { display: grid; grid-template-columns: 1.55fr 1fr; gap: 1.3rem; align-items: start; }
+.shot-pair .shot { margin-top: 0; }
+@media (max-width: 700px) { .shot-pair { grid-template-columns: 1fr; gap: 2.2rem; } }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
 </style></head><body>
 <div class="mf-grain"></div>
 <div class="mf-vignette"></div>
@@ -158,10 +177,10 @@ body{cursor:crosshair;}
   <h2>Zero external URLs, <em>verified</em></h2>
   <p class="lede">The first build looked offline and wasn't — it pulled Google Fonts. Stripped and replaced with five TTF files served from a FastAPI static mount, then checked the rendered HTML for any remaining outbound request.</p>
   <div class="grid">
-    <div class="card"><h4>Fonts</h4><p>Exo 2 at <b>300/400/600/700</b> plus Share Tech Mono, mounted at <code>/fonts/</code>.</p></div>
-    <div class="card"><h4>Transport</h4><p>Tablet browser over <b>local WiFi hotspot</b> to the mini-PC. No router upstream, no DNS.</p></div>
-    <div class="card"><h4>Radio link</h4><p>VARA modem on the PC, <b>Digirig or SignaLink</b> to the rig. Audio never touches a network.</p></div>
-    <div class="card"><h4>Fallback</h4><p><b>ardopcf</b> is documented as the open-source path — runs natively on a Pi if VARA's closed binary ever becomes a problem.</p></div>
+    <div class="card reveal"><h4>Fonts</h4><p>Exo 2 at <b>300/400/600/700</b> plus Share Tech Mono, mounted at <code>/fonts/</code>.</p></div>
+    <div class="card reveal d1"><h4>Transport</h4><p>Tablet browser over <b>local WiFi hotspot</b> to the mini-PC. No router upstream, no DNS.</p></div>
+    <div class="card reveal d2"><h4>Radio link</h4><p>VARA modem on the PC, <b>Digirig or SignaLink</b> to the rig. Audio never touches a network.</p></div>
+    <div class="card reveal d3"><h4>Fallback</h4><p><b>ardopcf</b> is documented as the open-source path — runs natively on a Pi if VARA's closed binary ever becomes a problem.</p></div>
   </div>
   <p class="aside">Built for a friend who needs communications that survive the infrastructure going away. That constraint drove every decision in the stack.</p>
 </section>
@@ -172,13 +191,13 @@ body{cursor:crosshair;}
   <div class="eyebrow">Files</div>
   <h2>Six files, <em>no build step</em></h2>
   <div class="grid">
-    <div class="card"><h4>launch.py</h4><p>Entry point. Optional Cloudflare Quick Tunnel when you actually do want it reachable.</p></div>
-    <div class="card"><h4>server.py</h4><p>FastAPI + WebSocket bridge to the VARA modem on TCP, with a demo mode when no modem is present.</p></div>
-    <div class="card"><h4>rig_control.py</h4><p>Hamlib <code>rigctld</code> wrapper — frequency, mode, PTT.</p></div>
-    <div class="card"><h4>rig_list.json</h4><p>283 radios, parsed once so the UI never shells out to enumerate.</p></div>
-    <div class="card"><h4>index.html</h4><p>The whole operator UI. Amber, deliberately — the first pass was too gloomy to read at 3am.</p></div>
-    <div class="card"><h4>fonts/</h4><p>Five TTFs. The difference between "offline" and offline.</p></div>
-    <div class="card"><h4>The rename</h4><p>PyVarAC became <b>NovarAC</b> — a module-by-module rename still working its way through the tree. Components: WebSocket server, VARA HF protocol engine, audio bridge, rig control, frequency scheduler.</p></div>
+    <div class="card reveal"><h4>launch.py</h4><p>Entry point. Optional Cloudflare Quick Tunnel when you actually do want it reachable.</p></div>
+    <div class="card reveal d1"><h4>server.py</h4><p>FastAPI + WebSocket bridge to the VARA modem on TCP, with a demo mode when no modem is present.</p></div>
+    <div class="card reveal d2"><h4>rig_control.py</h4><p>Hamlib <code>rigctld</code> wrapper — frequency, mode, PTT.</p></div>
+    <div class="card reveal d3"><h4>rig_list.json</h4><p>283 radios, parsed once so the UI never shells out to enumerate.</p></div>
+    <div class="card reveal"><h4>index.html</h4><p>The whole operator UI. Amber, deliberately — the first pass was too gloomy to read at 3am.</p></div>
+    <div class="card reveal d1"><h4>fonts/</h4><p>Five TTFs. The difference between "offline" and offline.</p></div>
+    <div class="card reveal d2"><h4>The rename</h4><p>PyVarAC became <b>NovarAC</b> — a module-by-module rename still working its way through the tree. Components: WebSocket server, VARA HF protocol engine, audio bridge, rig control, frequency scheduler.</p></div>
   </div>
   <p class="aside">Every file was syntax-checked, import-tested and run end-to-end against a live server before handoff. <b>Nothing shipped untested.</b></p>
 </section>
@@ -285,6 +304,22 @@ document.querySelectorAll('.rv,.gap').forEach(e=>io.observe(e));
   if(touch){g.style.display='none';return}
   addEventListener('mousemove',function(e){tx=e.clientX;ty=e.clientY});
   (function loop(){cx+=(tx-cx)*.09;cy+=(ty-cy)*.09;g.style.left=cx+'px';g.style.top=cy+'px';requestAnimationFrame(loop)})();
+})();
+
+/* scroll reveal — shared */
+(function () {
+  var els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
+  if (!('IntersectionObserver' in window)) {
+    for (var i = 0; i < els.length; i++) els[i].classList.add('in');
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  els.forEach(function (e) { io.observe(e); });
 })();
 </script>
 </body></html>

@@ -102,6 +102,25 @@ footer{padding:100px 24px 80px}footer p{color:var(--dim);font-size:14.5px;max-wi
 h1,h2{font-family:'Playfair Display',serif!important;font-style:italic;}
 .eyebrow{font-family:'Syncopate',sans-serif!important;font-weight:400;}
 body{cursor:crosshair;}
+
+/* ── motion + media (shared) ── */
+.reveal { opacity: 0; transform: translateY(18px);
+  transition: opacity .9s cubic-bezier(.2,.7,.3,1), transform .9s cubic-bezier(.2,.7,.3,1); }
+.reveal.in { opacity: 1; transform: none; }
+.reveal.d1 { transition-delay: .07s; } .reveal.d2 { transition-delay: .14s; } .reveal.d3 { transition-delay: .21s; }
+.shot { margin: 3.6rem 0 0; }
+.shot img { width: 100%; display: block; background: #050403;
+  border: 1px solid rgba(200,169,110,.18); box-shadow: 0 18px 60px rgba(0,0,0,.75);
+  transition: border-color .5s ease, box-shadow .5s ease; }
+.shot:hover img { border-color: rgba(200,169,110,.4); box-shadow: 0 18px 70px rgba(0,0,0,.9), 0 0 40px rgba(200,169,110,.06); }
+.shot figcaption { margin-top: .95rem; font-family: 'EB Garamond', serif; font-style: italic;
+  font-size: .92rem; color: var(--nav); text-align: center; letter-spacing: .03em; }
+.shot-pair { display: grid; grid-template-columns: 1.55fr 1fr; gap: 1.3rem; align-items: start; }
+.shot-pair .shot { margin-top: 0; }
+@media (max-width: 700px) { .shot-pair { grid-template-columns: 1fr; gap: 2.2rem; } }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
 </style></head><body>
 <div class="mf-grain"></div>
 <div class="mf-vignette"></div>
@@ -137,10 +156,10 @@ body{cursor:crosshair;}
   <h2>Four links, and <em>any one can break</em></h2>
   <p class="lede">Nothing here is a managed service. It's a tunnel to a laptop to a USB cable to a phone, and each junction fails in its own way with its own unhelpful error.</p>
   <div class="grid">
-    <div class="card"><h4>Tunnel</h4><p>A Cloudflare Quick Tunnel gives a throwaway https URL with no account. Convenient, and the hostname <b>changes every restart</b> — the MCP config goes stale silently.</p></div>
-    <div class="card"><h4>MCP layer</h4><p>Tool schemas wrap shell invocations. The schema is the contract — a vague description gets a model calling the wrong tool confidently.</p></div>
-    <div class="card"><h4>ADB</h4><p>Authorisation is per host key and lives on the phone. Replug into a different port and you're re-approving the fingerprint on the device screen.</p></div>
-    <div class="card warn"><h4>The device</h4><p>Doze and battery optimisation will kill a background listener without telling anyone. <b>It looks like a network fault and isn't.</b></p></div>
+    <div class="card reveal"><h4>Tunnel</h4><p>A Cloudflare Quick Tunnel gives a throwaway https URL with no account. Convenient, and the hostname <b>changes every restart</b> — the MCP config goes stale silently.</p></div>
+    <div class="card reveal d1"><h4>MCP layer</h4><p>Tool schemas wrap shell invocations. The schema is the contract — a vague description gets a model calling the wrong tool confidently.</p></div>
+    <div class="card reveal d2"><h4>ADB</h4><p>Authorisation is per host key and lives on the phone. Replug into a different port and you're re-approving the fingerprint on the device screen.</p></div>
+    <div class="card warn reveal d3"><h4>The device</h4><p>Doze and battery optimisation will kill a background listener without telling anyone. <b>It looks like a network fault and isn't.</b></p></div>
   </div>
 </section>
 
@@ -151,10 +170,10 @@ body{cursor:crosshair;}
   <h2>This is a <em>lot</em> of access</h2>
   <p class="lede">Screen capture, input injection, app launching, file transfer, log access. ADB was built for developers holding their own hardware, and every bit of that surface is now reachable from a chat window.</p>
   <div class="grid">
-    <div class="card"><h4>Own device only</h4><p>The phone is yours, the tunnel is yours, the endpoint is yours. Nothing about this generalises to a device you don't own.</p></div>
-    <div class="card"><h4>Tunnel URL is the key</h4><p>An unauthenticated Quick Tunnel URL <b>is</b> the credential. Anyone with the string has the phone. Named tunnels with access policies are the real answer.</p></div>
-    <div class="card"><h4>No standing state</h4><p>The server holds no session. Kill the tunnel and the whole capability disappears — which is the intended off switch.</p></div>
-    <div class="card"><h4>Read before write</h4><p>Inspection tools are safe to call freely. Anything that injects input or moves files deserves a gate, the same way Pi gates SMS.</p></div>
+    <div class="card reveal"><h4>Own device only</h4><p>The phone is yours, the tunnel is yours, the endpoint is yours. Nothing about this generalises to a device you don't own.</p></div>
+    <div class="card reveal d1"><h4>Tunnel URL is the key</h4><p>An unauthenticated Quick Tunnel URL <b>is</b> the credential. Anyone with the string has the phone. Named tunnels with access policies are the real answer.</p></div>
+    <div class="card reveal d2"><h4>No standing state</h4><p>The server holds no session. Kill the tunnel and the whole capability disappears — which is the intended off switch.</p></div>
+    <div class="card reveal d3"><h4>Read before write</h4><p>Inspection tools are safe to call freely. Anything that injects input or moves files deserves a gate, the same way Pi gates SMS.</p></div>
   </div>
   <p class="aside">It pairs with <b>Pi</b> from the other direction: Pi is a model living <em>on</em> the phone reaching outward; this is a model living outside reaching <em>in</em>.</p>
 </section>
@@ -272,6 +291,22 @@ document.querySelectorAll('.rv,.gap').forEach(e=>io.observe(e));
   if(touch){g.style.display='none';return}
   addEventListener('mousemove',function(e){tx=e.clientX;ty=e.clientY});
   (function loop(){cx+=(tx-cx)*.09;cy+=(ty-cy)*.09;g.style.left=cx+'px';g.style.top=cy+'px';requestAnimationFrame(loop)})();
+})();
+
+/* scroll reveal — shared */
+(function () {
+  var els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
+  if (!('IntersectionObserver' in window)) {
+    for (var i = 0; i < els.length; i++) els[i].classList.add('in');
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  els.forEach(function (e) { io.observe(e); });
 })();
 </script>
 </body></html>

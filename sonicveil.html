@@ -82,6 +82,25 @@ footer{padding:110px 24px 90px}footer p{color:var(--dim);font-size:15px;max-widt
 @media(max-width:680px){.gap{height:92px}.split{grid-template-columns:1fr}.trow{grid-template-columns:70px 1fr;gap:10px}.trow .s{grid-column:1/-1;text-align:left}
   .mf-corner{font-size:8px;letter-spacing:.22em}.mf-tl{top:2.2vh}.mf-return{bottom:2.2vh}.mf-year{bottom:2.2vh}}
 @media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none}*{transition-duration:.01ms!important}}
+
+/* ── motion + media (shared) ── */
+.reveal { opacity: 0; transform: translateY(18px);
+  transition: opacity .9s cubic-bezier(.2,.7,.3,1), transform .9s cubic-bezier(.2,.7,.3,1); }
+.reveal.in { opacity: 1; transform: none; }
+.reveal.d1 { transition-delay: .07s; } .reveal.d2 { transition-delay: .14s; } .reveal.d3 { transition-delay: .21s; }
+.shot { margin: 3.6rem 0 0; }
+.shot img { width: 100%; display: block; background: #050403;
+  border: 1px solid rgba(200,169,110,.18); box-shadow: 0 18px 60px rgba(0,0,0,.75);
+  transition: border-color .5s ease, box-shadow .5s ease; }
+.shot:hover img { border-color: rgba(200,169,110,.4); box-shadow: 0 18px 70px rgba(0,0,0,.9), 0 0 40px rgba(200,169,110,.06); }
+.shot figcaption { margin-top: .95rem; font-family: 'EB Garamond', serif; font-style: italic;
+  font-size: .92rem; color: var(--nav); text-align: center; letter-spacing: .03em; }
+.shot-pair { display: grid; grid-template-columns: 1.55fr 1fr; gap: 1.3rem; align-items: start; }
+.shot-pair .shot { margin-top: 0; }
+@media (max-width: 700px) { .shot-pair { grid-template-columns: 1fr; gap: 2.2rem; } }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
 </style></head><body>
 
 <div class="mf-grain"></div>
@@ -132,9 +151,9 @@ footer{padding:110px 24px 90px}footer p{color:var(--dim);font-size:15px;max-widt
   <div class="eyebrow">Further back</div>
   <h2>Where the <em>range</em> shows</h2>
   <div class="grid">
-    <div class="card"><h4>Strings</h4><p>Feat. <b>Austin Corbett</b> — out on Amazon Music, iTunes and the rest of the 150-platform spread. The collaboration credit, in writing.</p></div>
-    <div class="card"><h4>Equinox</h4><p>Released Aug 26, 2024. 3:35. A solo instrumental single — no vocal, no feature, just the composition on its own.</p></div>
-    <div class="card"><h4>Spirits</h4><p>Published March 26, 2023, tagged <b>Folk & Singer-Songwriter</b> — the most lyrically direct thing in the catalogue. Copyright X2 Studios.</p></div>
+    <div class="card reveal"><h4>Strings</h4><p>Feat. <b>Austin Corbett</b> — out on Amazon Music, iTunes and the rest of the 150-platform spread. The collaboration credit, in writing.</p></div>
+    <div class="card reveal d1"><h4>Equinox</h4><p>Released Aug 26, 2024. 3:35. A solo instrumental single — no vocal, no feature, just the composition on its own.</p></div>
+    <div class="card reveal d2"><h4>Spirits</h4><p>Published March 26, 2023, tagged <b>Folk & Singer-Songwriter</b> — the most lyrically direct thing in the catalogue. Copyright X2 Studios.</p></div>
   </div>
   <p class="aside">Three releases, three different genre tags, three different modes — a feature collaboration, a solo instrumental, and a lyric-forward folk song. That spread is the actual evidence for "genre-bending," not just the word in the bio.</p>
 </section>
@@ -151,8 +170,8 @@ footer{padding:110px 24px 90px}footer p{color:var(--dim);font-size:15px;max-widt
     <div class="stat"><b>150+</b><span>platforms</span></div>
   </div>
   <div class="split" style="margin-top:34px">
-    <div class="card"><h4>Close collaborator</h4><p>Austin Corbett is named directly in the SoundCloud profile as a close collaborator, with his own work pointed to as "Indy Vibe originals" — not an occasional feature, a standing partnership.</p></div>
-    <div class="card"><h4>Distribution</h4><p>SoundCloud is the working feed — releases land there first — but the catalogue is fully distributed out to Spotify, Apple Music, iHeartRadio, and the rest of the 150-platform spread through a standard distributor pipeline.</p></div>
+    <div class="card reveal d3"><h4>Close collaborator</h4><p>Austin Corbett is named directly in the SoundCloud profile as a close collaborator, with his own work pointed to as "Indy Vibe originals" — not an occasional feature, a standing partnership.</p></div>
+    <div class="card reveal"><h4>Distribution</h4><p>SoundCloud is the working feed — releases land there first — but the catalogue is fully distributed out to Spotify, Apple Music, iHeartRadio, and the rest of the 150-platform spread through a standard distributor pipeline.</p></div>
   </div>
 </section>
 
@@ -255,6 +274,22 @@ document.querySelectorAll('.rv,.gap').forEach(e=>io.observe(e));
   if(matchMedia('(hover: none)').matches){g.style.display='none';return}
   addEventListener('mousemove',e=>{tx=e.clientX;ty=e.clientY});
   (function loop(){cx2+=(tx-cx2)*.09;cy2+=(ty-cy2)*.09;g.style.left=cx2+'px';g.style.top=cy2+'px';requestAnimationFrame(loop)})();
+})();
+
+/* scroll reveal — shared */
+(function () {
+  var els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
+  if (!('IntersectionObserver' in window)) {
+    for (var i = 0; i < els.length; i++) els[i].classList.add('in');
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  els.forEach(function (e) { io.observe(e); });
 })();
 </script>
 </body></html>
