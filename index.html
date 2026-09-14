@@ -233,6 +233,25 @@ footer.mf p{font-family:'EB Garamond',serif;font-style:italic;color:var(--nav);f
   .sys-row .tg{margin-top:.3rem}
 }
 @media (max-width: 420px) { .name { font-size: clamp(3.2rem, 17vw, 4.5rem); } }
+
+/* ── motion + media (shared) ── */
+.reveal { opacity: 0; transform: translateY(18px);
+  transition: opacity .9s cubic-bezier(.2,.7,.3,1), transform .9s cubic-bezier(.2,.7,.3,1); }
+.reveal.in { opacity: 1; transform: none; }
+.reveal.d1 { transition-delay: .07s; } .reveal.d2 { transition-delay: .14s; } .reveal.d3 { transition-delay: .21s; }
+.shot { margin: 3.6rem 0 0; }
+.shot img { width: 100%; display: block; background: #050403;
+  border: 1px solid rgba(200,169,110,.18); box-shadow: 0 18px 60px rgba(0,0,0,.75);
+  transition: border-color .5s ease, box-shadow .5s ease; }
+.shot:hover img { border-color: rgba(200,169,110,.4); box-shadow: 0 18px 70px rgba(0,0,0,.9), 0 0 40px rgba(200,169,110,.06); }
+.shot figcaption { margin-top: .95rem; font-family: 'EB Garamond', serif; font-style: italic;
+  font-size: .92rem; color: var(--nav); text-align: center; letter-spacing: .03em; }
+.shot-pair { display: grid; grid-template-columns: 1.55fr 1fr; gap: 1.3rem; align-items: start; }
+.shot-pair .shot { margin-top: 0; }
+@media (max-width: 700px) { .shot-pair { grid-template-columns: 1fr; gap: 2.2rem; } }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
 </style>
 </head>
 <body>
@@ -283,11 +302,17 @@ const SYSTEMS = [
   ["meshnet.html","MeshNet","LoRa mesh with no tower in the middle.","live"],
   ["proximity.html","Proximity","Seeing people through walls with ambient WiFi.","live"],
   ["watchyourgrass.html","Watch Your Grass","A garden that fights back. 6×6.","live"],
-  ["wormcrawler.html","Worm Crawler","An ingredient scanner that says \u2018I don\u2019t know.\u2019","live"],
+  ["wormeater.html","Worm Eater","An ingredient scanner that says \u2018I don\u2019t know.\u2019","live"],
   ["cryptovault.html","CryptoVault","RSA-4096 and AES-256, no server, one file.","stalled"],
   ["phone-mcp.html","Phone MCP","A model on the internet, holding a real Android.","live"],
   ["crime-dashboard.html","Crime Intelligence","43 cities, four categories, one HTML file.","live"],
-  ["sonicveil.html","Sonic Veil","Composer. Since 2016. Genre-bending.","music"]
+  ["sonicveil.html","Sonic Veil","Composer. Since 2016. Genre-bending.","music"],
+  ["verel.html","Verel","Genuine presence without provable aliveness.","concept"],
+  ["conflict-atlas.html","Conflict Atlas","Twenty-eight active wars, tiered by cost.","data"],
+  ["neural-sim.html","Neural Sim","Watching a network decide what it is.","research"],
+  ["shop.html","The Shop","G-code, steel, and no room to be approximately right.","craft"],
+  ["frames.html","Frames","Twenty-eight photographs. Nothing that does anything.","photography"],
+  ["sketches.html","Sketches","Built in an afternoon. Kept as sketches.","small"]
 ];
 const list = document.getElementById('sysList');
 SYSTEMS.forEach(([href,name,desc,tag])=>{
@@ -311,6 +336,22 @@ if (!isTouchDevice) {
     requestAnimationFrame(loop);
   })();
 }
+
+/* scroll reveal — shared */
+(function () {
+  var els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
+  if (!('IntersectionObserver' in window)) {
+    for (var i = 0; i < els.length; i++) els[i].classList.add('in');
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  els.forEach(function (e) { io.observe(e); });
+})();
 </script>
 </body>
 </html>

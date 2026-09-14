@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="Twenty-eight active conflicts, tiered by intensity. June 2026."/>
+<meta property="og:title" content="Conflict Atlas"/>
+<meta property="og:description" content="Twenty-eight active conflicts, tiered by intensity. June 2026."/>
+<meta name="theme-color" content="#000000"/>
+<title>Conflict Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Syncopate:wght@400;700&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --black: #000000; --gold: #c8a96e; --gold-dim: #8a7050; --gold-label: #7a6040;
+  --white: #f2e6cf; --off: #c4b09a; --nav: #7a6e62; --ember: #b02a1a; --ember-hi: #d94030;
+}
+html, body { min-height: 100%; background: var(--black); color: var(--white);
+  font-family: 'EB Garamond', serif; overflow-x: hidden; overflow-y: auto; cursor: crosshair; }
+body::before { content: ''; position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.05; pointer-events: none; z-index: 100; }
+body::after { content: ''; position: fixed; inset: 0;
+  background: radial-gradient(ellipse 90% 70% at 50% 50%, transparent 15%, rgba(0,0,0,0.55) 60%, rgba(0,0,0,0.95) 100%);
+  pointer-events: none; z-index: 99; }
+.ambient { position: fixed; bottom: -18vh; left: 50%; transform: translateX(-50%);
+  width: 70vw; height: 45vh; background: radial-gradient(ellipse, rgba(176,42,26,0.09) 0%, transparent 65%);
+  pointer-events: none; z-index: 97; animation: breathe 9s ease-in-out infinite; }
+@keyframes breathe { 0%,100% { opacity: 0.6; } 50% { opacity: 1; } }
+.container { min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+  align-items: center; text-align: center; padding: clamp(5rem,10vh,8rem) clamp(1.5rem,12vw,14vw); position: relative; }
+.rule-h { position: absolute; top: 13vh; left: 50%; transform: translateX(-50%);
+  width: clamp(80px,18vw,220px); height: 1px; background: linear-gradient(to right, transparent, var(--gold-dim), transparent); }
+.rule-h-bottom { position: absolute; bottom: 13vh; left: 50%; transform: translateX(-50%);
+  width: clamp(50px,9vw,120px); height: 1px; background: linear-gradient(to right, transparent, var(--gold-dim), transparent); opacity: .45; }
+.label { font-family: 'Syncopate', sans-serif; font-size: clamp(10px,1.1vw,12px); letter-spacing: .45em;
+  color: var(--gold-label); text-transform: uppercase; margin-bottom: clamp(1.8rem,4vh,3rem);
+  opacity: 0; animation: fadeUp 1s .1s forwards ease-out; }
+.name { font-family: 'Playfair Display', serif; font-size: clamp(3.4rem,12vw,10rem); font-weight: 700;
+  font-style: italic; letter-spacing: -.03em; line-height: .84; color: var(--white);
+  opacity: 0; animation: fadeUp 1.1s .38s forwards ease-out; }
+.name span { font-style: normal; font-weight: 900; color: var(--gold); }
+.tagline { margin-top: clamp(1.6rem,3.5vh,3rem); font-size: clamp(1.05rem,2vw,1.3rem); font-style: italic;
+  color: var(--off); letter-spacing: .12em; opacity: 0; animation: fadeUp 1s .65s forwards ease-out; }
+.divider { margin: clamp(2.8rem,5.5vh,4.8rem) auto clamp(2.4rem,4.5vh,4.2rem); width: clamp(44px,6vw,90px);
+  height: 1px; background: linear-gradient(to right, transparent, var(--gold), transparent);
+  opacity: 0; animation: fadeIn 1s .9s forwards ease-out; }
+.body { font-size: clamp(.95rem,1.55vw,1.18rem); font-style: italic; color: var(--nav);
+  letter-spacing: .06em; max-width: 48ch; line-height: 1.7; opacity: 0; animation: fadeUp 1s 1.1s forwards ease-out; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.corner { position: fixed; font-family: 'Syncopate', sans-serif; font-size: clamp(8px,.85vw,10px);
+  letter-spacing: .4em; text-transform: uppercase; opacity: 0; animation: fadeIn 1s 2.3s forwards; z-index: 101; }
+.stamp { bottom: 5vh; right: 5vw; color: var(--nav); }
+.year { top: 5vh; right: 5vw; color: var(--gold-dim); }
+.corner-tl { top: 5vh; left: 5vw; color: var(--nav); text-decoration: none; }
+.corner-tl:hover { color: var(--gold); }
+.cursor-glow { position: fixed; width: 520px; height: 520px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(176,42,26,.055) 0%, transparent 65%);
+  pointer-events: none; transform: translate(-50%,-50%); z-index: 98; }
+.scrollcue { position: absolute; bottom: 5vh; left: 50%; transform: translateX(-50%);
+  font-family: 'Syncopate', sans-serif; font-size: 9px; letter-spacing: .3em; color: var(--nav);
+  opacity: 0; animation: fadeIn 1s 2.6s forwards, bob 2.6s 3.6s infinite ease-in-out; }
+@keyframes bob { 0%,100% { transform: translate(-50%,0); } 50% { transform: translate(-50%,7px); } }
+.frag-wrap { position: relative; max-width: 740px; margin: 0 auto; padding: 14vh clamp(1.5rem,8vw,6rem) 10vh; }
+.frag-head { text-align: center; margin-bottom: 6rem; }
+.frag-label { font-family: 'Syncopate', sans-serif; font-size: 11px; letter-spacing: .42em; color: var(--gold-label); text-transform: uppercase; }
+.frag-title { font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700;
+  font-size: clamp(2rem,4.6vw,3rem); color: var(--white); margin-top: 1rem; letter-spacing: -.01em; }
+.frag-title em { color: var(--gold); font-style: italic; }
+.frag { position: relative; padding: 2.4rem 0; border-top: 1px solid rgba(200,169,110,.14); }
+.frag:last-child { border-bottom: 1px solid rgba(200,169,110,.14); }
+.frag .tag { font-family: 'Syncopate', sans-serif; font-size: 9px; letter-spacing: .24em;
+  text-transform: uppercase; color: var(--gold-dim); display: block; margin-bottom: 1rem; }
+.frag p { font-style: italic; font-size: 1.15rem; line-height: 1.75; color: var(--off); }
+.frag p + p { margin-top: 1rem; }
+.frag p b { color: var(--white); font-weight: 600; font-style: normal; }
+.frag p em { color: var(--gold); font-style: italic; }
+.frag.ember p b { color: var(--ember-hi); }
+footer.mf { padding: 8vh 24px 12vh; text-align: center; }
+footer.mf p { font-style: italic; color: var(--nav); font-size: .95rem; max-width: 46ch; margin: 0 auto; }
+footer.mf a { color: var(--gold-dim); text-decoration: none; font-family: 'Syncopate', sans-serif;
+  font-size: 10px; letter-spacing: .3em; text-transform: uppercase; display: inline-block; margin-top: 2.5rem; transition: .3s; }
+footer.mf a:hover { color: var(--gold); }
+@media (max-width: 600px) {
+  .rule-h, .rule-h-bottom, .corner, .cursor-glow, .scrollcue { display: none; }
+  .container { padding: 4rem 1.8rem; min-height: 100svh; }
+}
+
+.reveal { opacity: 0; transform: translateY(18px);
+  transition: opacity .9s cubic-bezier(.2,.7,.3,1), transform .9s cubic-bezier(.2,.7,.3,1); }
+.reveal.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+.atlas { max-width: 900px; margin: 0 auto; padding: 0 clamp(1.5rem,8vw,6rem) 6vh; }
+.tiers { display: flex; justify-content: center; gap: clamp(1.4rem,5vw,3.5rem); flex-wrap: wrap; margin-bottom: 5rem; }
+.tier-stat { text-align: center; }
+.tier-stat b { display: block; font-family: 'Playfair Display', serif; font-style: italic; font-size: 2.6rem; line-height: 1; }
+.tier-stat span { display: block; font-family: 'Syncopate', sans-serif; font-size: 8.5px; letter-spacing: .24em;
+  text-transform: uppercase; color: var(--nav); margin-top: .6rem; }
+.t-r b { color: var(--ember-hi); } .t-o b { color: #e8793a; } .t-y b { color: var(--gold); }
+.t-all b { color: var(--off); }
+.cf { padding: 2rem 0; border-top: 1px solid rgba(200,169,110,.14); display: grid;
+  grid-template-columns: 8px 1fr; gap: 1.3rem; align-items: start; }
+.cf:last-child { border-bottom: 1px solid rgba(200,169,110,.14); }
+.cf-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: .7rem; }
+.cf-r .cf-dot { background: var(--ember-hi); box-shadow: 0 0 9px rgba(217,64,48,.6); }
+.cf-o .cf-dot { background: #e8793a; box-shadow: 0 0 9px rgba(232,121,58,.5); }
+.cf-y .cf-dot { background: var(--gold); box-shadow: 0 0 8px rgba(200,169,110,.45); }
+.cf h3 { font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700;
+  font-size: 1.32rem; color: var(--white); letter-spacing: -.01em; }
+.cf-meta { font-family: 'Syncopate', sans-serif; font-size: 8.5px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--gold-dim); margin: .55rem 0 .9rem; }
+.cf-meta i { color: var(--nav); font-style: normal; }
+.cf p { font-style: italic; font-size: 1.03rem; line-height: 1.72; color: var(--off); }
+@media (max-width: 600px) { .cf { grid-template-columns: 6px 1fr; gap: .9rem; } }
+</style>
+</head>
+<body>
+<div class="cursor-glow" id="glow"></div>
+<div class="ambient"></div>
+<div class="container">
+  <div class="rule-h"></div>
+  <div class="rule-h-bottom"></div>
+  <p class="label">twenty-eight &nbsp;—&nbsp; active &nbsp;—&nbsp; june MMXXVI</p>
+  <h1 class="name">Conflict Atl<span>as</span></h1>
+  <p class="tagline">Twenty-eight active conflicts, tiered by what they cost.</p>
+  <div class="divider"></div>
+  <p class="body">Seven major wars. Eleven significant. Ten active.<br>Counted rather than summarised, because the count is the argument.</p>
+  <div class="scrollcue">↓ the atlas</div>
+</div>
+<a href="index.html" class="corner corner-tl">Mentifaber</a>
+<div class="corner year">MMXXVI</div>
+<div class="corner stamp">The archive.</div>
+
+<section class="atlas">
+  <div class="tiers reveal">
+    <div class="tier-stat t-r"><b>7</b><span>Major war</span></div>
+    <div class="tier-stat t-o"><b>11</b><span>Significant</span></div>
+    <div class="tier-stat t-y"><b>10</b><span>Active</span></div>
+    <div class="tier-stat t-all"><b>28</b><span>Tracked</span></div>
+  </div>
+  <article class="cf cf-r reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>U.S. / Israel – Iran War</h3>
+      <div class="cf-meta">Major war <i>·</i> Middle East <i>·</i> Fragile ceasefire</div>
+      <p>Operation Epic Fury, Feb 28 2026. Khamenei killed in strikes; Iran retaliated against US bases in the UAE, Qatar and Bahrain. Hormuz mined and blocked. An MOU was signed Jun 17 — then an IRGC drone struck a Singapore cargo ship on Jun 26. 1,348+ confirmed killed. Nuclear talks continue in Switzerland.</p>
+    </div>
+  </article>
+  <article class="cf cf-r reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>Russia – Ukraine War</h3>
+      <div class="cf-meta">Major war <i>·</i> Europe <i>·</i> Active · year five</div>
+      <p>The largest conflict in Europe since the Second World War, and the most lethal active war on earth — 80,205 deaths in 2025 alone. Year five is dominated by long-range drone warfare and strikes on energy infrastructure. Roughly 350,000 Russian and 140,000 Ukrainian soldiers killed. No ceasefire.</p>
+    </div>
+  </article>
+  <article class="cf cf-r reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>Sudan Civil War — SAF vs RSF</h3>
+      <div class="cf-meta">Major war <i>·</i> Africa <i>·</i> Active · year three</div>
+      <p>The UN calls this the world's worst humanitarian crisis. ~150,000 civilians killed, 12 million displaced, 33.7 million in need of aid. The UAE backs the RSF; Egypt backs the SAF. Gold mining finances both sides. Mass starvation in Darfur.</p>
+    </div>
+  </article>
+  <article class="cf cf-r reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>Myanmar Civil War</h3>
+      <div class="cf-meta">Major war <i>·</i> SE Asia <i>·</i> World's longest</div>
+      <p>Ongoing since 1948 — the longest running civil war in the world. The 2021 coup reignited it at full scale; 15,420+ killed between mid-2024 and mid-2025. China has thrown its weight decisively behind the junta, which has regained the upper hand after a rebel-ascendant 2024.</p>
+    </div>
+  </article>
+  <article class="cf cf-r reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>DR Congo — M23 / Rwanda</h3>
+      <div class="cf-meta">Major war <i>·</i> Central Africa <i>·</i> Active</div>
+      <p>Rwanda-backed M23 rebels captured Goma, the eastern DRC capital. Rwanda has effectively annexed North and South Kivu through proxies. A ceasefire was brokered in June 2025; fighting continues on the ground regardless. Coltan extraction funds it.</p>
+    </div>
+  </article>
+  <article class="cf cf-r reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>Sahel Insurgency — Mali / Niger / Burkina Faso</h3>
+      <div class="cf-meta">Major war <i>·</i> West Africa <i>·</i> Expanding</div>
+      <p>21,185 deaths in 2025. After coups expelled Western forces, al-Qaeda and ISIS filled the vacuum within months. Russia's Africa Corps operates across the region, with documented executions of ethnic Fulani civilians in Mali. Spreading south toward the coast.</p>
+    </div>
+  </article>
+  <article class="cf cf-r reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>Israel – Lebanon / Hezbollah</h3>
+      <div class="cf-meta">Major war <i>·</i> Middle East <i>·</i> Active</div>
+      <p>Re-escalated Mar 2 2026 when the Khamenei assassination triggered Hezbollah rocket salvos and heavy Israeli airstrikes across Lebanon. A fifth round of US-brokered talks is underway in Washington. Jun 21 was the first attack-free day since March.</p>
+    </div>
+  </article>
+  <article class="cf cf-o reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>Israel – Gaza / Hamas</h3>
+      <div class="cf-meta">Significant <i>·</i> Middle East <i>·</i> Fragile ceasefire</div>
+      <p>Began Oct 7 2023. Gaza's civilian infrastructure is largely destroyed after operations resumed in March 2025. A ceasefire was signed; hundreds have been killed since — the gap between an agreement and the ground. 2.3M+ displaced.</p>
+    </div>
+  </article>
+  <article class="cf cf-o reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>Yemen War — Houthis</h3>
+      <div class="cf-meta">Significant <i>·</i> Middle East <i>·</i> Active</div>
+      <p>Active since 2014. Iran-backed Houthis continued striking Israel and Red Sea shipping throughout the 2026 Iran war. Retaliatory strikes have further degraded an already-collapsed state. The arsenal is partly degraded; they remain a significant regional actor.</p>
+    </div>
+  </article>
+  <article class="cf cf-o reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>Somalia — Al-Shabaab</h3>
+      <div class="cf-meta">Significant <i>·</i> East Africa <i>·</i> Active</div>
+      <p>Al-Shabaab, al-Qaeda's strongest affiliate, controls large areas of south-central Somalia and is expanding north. US AFRICOM ran 8+ airstrikes Jan–Mar 2026. Withdrawal of US security assistance risks major expansion. Somalia tops the Fragile States Index.</p>
+    </div>
+  </article>
+  <article class="cf cf-o reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>India – Pakistan / Operation Sindoor</h3>
+      <div class="cf-meta">Significant <i>·</i> South Asia <i>·</i> Tense ceasefire</div>
+      <p>The worst India–Pakistan confrontation in decades. Pakistan declared open war Feb 27 2026; India's Operation Sindoor struck targets across the Line of Control. A ceasefire holds but is fragile — both states are nuclear-armed and under domestic pressure.</p>
+    </div>
+  </article>
+  <article class="cf cf-o reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>Afghanistan – Pakistan Border War</h3>
+      <div class="cf-meta">Significant <i>·</i> South Asia <i>·</i> Active</div>
+      <p>Pakistan bombed Kabul in retaliation for TTP cross-border attacks; the Taliban government refuses to expel TTP fighters. Ongoing missile and drone strikes across the Durand Line, with Chinese mediation attempted and Kashmir running simultaneously.</p>
+    </div>
+  </article>
+  <article class="cf cf-o reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>Nigeria — Multiple Insurgencies</h3>
+      <div class="cf-meta">Significant <i>·</i> West Africa <i>·</i> Active</div>
+      <p>Four conflicts at once: Boko Haram and ISWAP in the northeast, bandit mass-abductions in the northwest, Fulani–farmer clashes in the Middle Belt, IPOB separatism in the southeast. Nigeria remains in the ACLED global top ten.</p>
+    </div>
+  </article>
+  <article class="cf cf-o reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>Haiti — Gang War</h3>
+      <div class="cf-meta">Significant <i>·</i> Caribbean <i>·</i> Active</div>
+      <p>4,500+ killed by political violence in 2025, nearly double 2024. Gangs control most of Port-au-Prince. The failure of international stabilisation, including the Kenya-led mission, enabled it. ACLED ranking jumped from 11th to 8th globally.</p>
+    </div>
+  </article>
+  <article class="cf cf-o reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>Syria / Iraq — ISIS Resurgence</h3>
+      <div class="cf-meta">Significant <i>·</i> Middle East <i>·</i> Escalating</div>
+      <p>Syria's new leader Ahmed al-Sharaa faces rising sectarian violence and an ISIS resurgence. US forces maintain counter-terror operations in both countries. ISIS is actively exploiting the regional distraction of the Iran war to rebuild capacity and territory.</p>
+    </div>
+  </article>
+  <article class="cf cf-o reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>Iran — Internal Instability</h3>
+      <div class="cf-meta">Significant <i>·</i> Middle East <i>·</i> Unstable</div>
+      <p>Late 2025: nationwide protests met with lethal force, 6,000+ killed by the government. Feb 2026: Khamenei killed in US/Israeli strikes, his son installed as successor. Nuclear and missile infrastructure destroyed. Regime legitimacy severely damaged.</p>
+    </div>
+  </article>
+  <article class="cf cf-o reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>Mexico — Cartel War</h3>
+      <div class="cf-meta">Significant <i>·</i> North America <i>·</i> Active</div>
+      <p>8,616 estimated deaths across 2024–25. The Sinaloa Cartel split triggered intensified inter-cartel warfare; CJNG and Sinaloa factions fight each other and the state with military-grade US weapons. The Trump administration has threatened direct strikes inside Mexico.</p>
+    </div>
+  </article>
+  <article class="cf cf-o reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>Cameroon — Ambazonia War</h3>
+      <div class="cf-meta">Significant <i>·</i> Central Africa <i>·</i> Active · ignored</div>
+      <p>Anglophone separatists have fought for an independent Ambazonia since 2016. HRW documents extrajudicial killings, village burnings and arbitrary detention by the military. Schools in anglophone regions have been shut for years. Near-zero Western coverage.</p>
+    </div>
+  </article>
+  <article class="cf cf-y reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>Ethiopia – Eritrea</h3>
+      <div class="cf-meta">Active <i>·</i> Horn of Africa <i>·</i> Pre-war tension</div>
+      <p>Ethiopia wants Red Sea access as Africa's most populous landlocked nation; Eritrea fears invasion. Both accuse the other of arming militias. A war between them would destabilise the entire Horn, and a distracted international community is largely ignoring it.</p>
+    </div>
+  </article>
+  <article class="cf cf-y reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>South Sudan</h3>
+      <div class="cf-meta">Active <i>·</i> East Africa <i>·</i> Volatile</div>
+      <p>Election delays risk renewed conflict between ethnic factions and political militias. The central government is fragile, with massive spillover pressure from Sudan's civil war and some of the worst food insecurity metrics in the world.</p>
+    </div>
+  </article>
+  <article class="cf cf-y reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>Mozambique — Cabo Delgado</h3>
+      <div class="cf-meta">Active <i>·</i> Southern Africa <i>·</i> Intensifying</div>
+      <p>An ISIS-linked insurgency intensifying through 2026, adjacent to major offshore gas projects. Rwandan and SADC troops are deployed; the insurgency persists. Widespread civilian displacement.</p>
+    </div>
+  </article>
+  <article class="cf cf-y reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>Libya — Managed Fragmentation</h3>
+      <div class="cf-meta">Active <i>·</i> North Africa <i>·</i> Frozen conflict</div>
+      <p>Turkey backs the western government; Russia, Egypt and the UAE back Haftar in the east. Africa's largest oil reserves keep both sides at the table without resolution. A major hub for trafficking and weapons flowing from the Sahel into Europe.</p>
+    </div>
+  </article>
+  <article class="cf cf-y reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>West Bank — Israeli Operations</h3>
+      <div class="cf-meta">Active <i>·</i> Middle East <i>·</i> Active</div>
+      <p>Escalating IDF operations, especially in Jenin, driven by settlement expansion, political repression and armed clashes. A worsening humanitarian crisis that complicates any diplomatic process.</p>
+    </div>
+  </article>
+  <article class="cf cf-y reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>South China Sea — China vs Philippines</h3>
+      <div class="cf-meta">Active <i>·</i> East Asia <i>·</i> Escalating</div>
+      <p>China blocked Scarborough Shoal at the peak of the Iran war. Water-cannon and ship-ramming manoeuvres against Philippine supply vessels are ongoing. The US–Philippines mutual defence treaty makes this one of the most dangerous long-term escalation risks on earth.</p>
+    </div>
+  </article>
+  <article class="cf cf-y reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>Bangladesh</h3>
+      <div class="cf-meta">Active <i>·</i> South Asia <i>·</i> Growing</div>
+      <p>Political and religious violence growing after the ouster of PM Sheikh Hasina in 2024. Elections postponed, governance crisis deepening, Islamist factions gaining in the vacuum. Violence against Hindu minorities documented.</p>
+    </div>
+  </article>
+  <article class="cf cf-y reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>Ecuador — Gang War</h3>
+      <div class="cf-meta">Active <i>·</i> South America <i>·</i> Active</div>
+      <p>50+ armed groups including ~40 gangs. ACLED rank 6 globally. Over 1,000 more killed than in 2024. Repeated states of emergency and ongoing prison massacres have made Ecuador one of the most violent nations in the hemisphere within a few years.</p>
+    </div>
+  </article>
+  <article class="cf cf-y reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>Brazil — Gang Violence</h3>
+      <div class="cf-meta">Active <i>·</i> South America <i>·</i> Active</div>
+      <p>Consistently top-ten on the ACLED Conflict Index. PCC and CV factions, alongside former-police militias, operate with near-impunity. Per-capita gang violence rivals active war zones, across both favelas and rural conflict.</p>
+    </div>
+  </article>
+  <article class="cf cf-y reveal">
+    <div class="cf-dot"></div>
+    <div>
+      <h3>Strait of Hormuz Crisis</h3>
+      <div class="cf-meta">Active <i>·</i> Persian Gulf <i>·</i> Contested</div>
+      <p>Iran closed the Strait on Mar 4 — 20% of global oil and LNG passes through it. Crude tanker traffic dropped 95%, LNG 99% at peak. A US counter-blockade ran Apr 13–May 29. 11,000+ seafarers stranded. Reopened Jun 17; the central channel is still mined.</p>
+    </div>
+  </article>
+</section>
+
+<section class="frag-wrap">
+  <div class="frag-head">
+    <p class="frag-label">On the method</p>
+    <h2 class="frag-title">Why a <em>list</em></h2>
+  </div>
+  <div class="frag reveal">
+    <span class="tag">the premise</span>
+    <p>Conflict coverage collapses into whichever war is currently legible to a newsroom. Cameroon has been at war since 2016 with <b>near-zero Western coverage</b>. Myanmar has been at war since 1948.</p>
+    <p>A list does not fix that. It does make the omission visible, which is the smallest useful thing a list can do.</p>
+  </div>
+  <div class="frag reveal">
+    <span class="tag">the tiers</span>
+    <p>Three bands — major war, significant, active — assigned by scale and lethality rather than by how much attention each one receives. The ordering is deliberately not the ordering you would get from a front page.</p>
+  </div>
+  <div class="frag ember reveal">
+    <span class="tag">what a ceasefire means here</span>
+    <p>Several entries are marked as ceasefires and are still killing people. Gaza has a signed ceasefire and hundreds of deaths since. Iran signed an MOU on Jun 17 and a cargo ship was struck on Jun 26.</p>
+    <p><b>The agreement and the ground are different objects.</b> The badges say which one is being described.</p>
+  </div>
+  <div class="frag reveal">
+    <span class="tag">the 3D version</span>
+    <p>This data also drives an interactive globe — markers on a rotating earth, tap for the detail. It is a separate build. This page is the readable one, and reading it takes longer, which is appropriate.</p>
+  </div>
+</section>
+
+<footer class="mf">
+  <p>Twenty-eight entries, June 2026. A snapshot of a moving thing, dated on purpose.</p>
+  <a href="index.html">Return to Mentifaber</a>
+</footer>
+
+<script>
+var glow = document.getElementById('glow');
+var cx = window.innerWidth / 2, cy = window.innerHeight / 2, tx = cx, ty = cy;
+if (!window.matchMedia('(hover: none)').matches) {
+  document.addEventListener('mousemove', function (e) { tx = e.clientX; ty = e.clientY; });
+  (function loop() {
+    cx += (tx - cx) * 0.09; cy += (ty - cy) * 0.09;
+    glow.style.left = cx + 'px'; glow.style.top = cy + 'px';
+    requestAnimationFrame(loop);
+  })();
+}
+(function () {
+  var els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
+  if (!('IntersectionObserver' in window)) {
+    for (var i = 0; i < els.length; i++) els[i].classList.add('in');
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  els.forEach(function (e) { io.observe(e); });
+})();
+</script>
+</body>
+</html>

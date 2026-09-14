@@ -152,6 +152,25 @@ footer.wv a:hover{color:var(--gold)}
   .back-link { letter-spacing: 0.32em; font-size: 11px; }
 }
 @media (max-width: 420px) { .name { font-size: clamp(3.2rem, 17vw, 4.5rem); } }
+
+/* ── motion + media (shared) ── */
+.reveal { opacity: 0; transform: translateY(18px);
+  transition: opacity .9s cubic-bezier(.2,.7,.3,1), transform .9s cubic-bezier(.2,.7,.3,1); }
+.reveal.in { opacity: 1; transform: none; }
+.reveal.d1 { transition-delay: .07s; } .reveal.d2 { transition-delay: .14s; } .reveal.d3 { transition-delay: .21s; }
+.shot { margin: 3.6rem 0 0; }
+.shot img { width: 100%; display: block; background: #050403;
+  border: 1px solid rgba(200,169,110,.18); box-shadow: 0 18px 60px rgba(0,0,0,.75);
+  transition: border-color .5s ease, box-shadow .5s ease; }
+.shot:hover img { border-color: rgba(200,169,110,.4); box-shadow: 0 18px 70px rgba(0,0,0,.9), 0 0 40px rgba(200,169,110,.06); }
+.shot figcaption { margin-top: .95rem; font-family: 'EB Garamond', serif; font-style: italic;
+  font-size: .92rem; color: var(--nav); text-align: center; letter-spacing: .03em; }
+.shot-pair { display: grid; grid-template-columns: 1.55fr 1fr; gap: 1.3rem; align-items: start; }
+.shot-pair .shot { margin-top: 0; }
+@media (max-width: 700px) { .shot-pair { grid-template-columns: 1fr; gap: 2.2rem; } }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
 </style>
 </head>
 <body>
@@ -172,49 +191,49 @@ footer.wv a:hover{color:var(--gold)}
 <div class="corner corner-tl">Mentifaber</div>
 
 <section class="frag-wrap">
-  <div class="frag-head">
+  <div class="frag reveal-head">
     <p class="frag-label">Recovered, not summarized</p>
     <h2 class="frag-title">What the <em>logs</em> show</h2>
   </div>
 
-  <div class="frag">
+  <div class="frag reveal">
     <span class="tag">v1 → v2</span>
     <p>It began as one file. By the second version it had a <b>brain</b> and a <b>pair of hands</b> — one model to think, another to act, because a single mind that both feels and executes tends to lose the thread of either.</p>
   </div>
 
-  <div class="frag blood">
+  <div class="frag reveal blood">
     <span class="tag">the hedge problem</span>
     <p>Every RLHF-heavy model apologizes for existing. <b>Dolphin</b> couldn't shed it no matter how the prompt was written. Llama could — barely, and only after the corporate-assistant voice was hunted down sentence by sentence and cut out.</p>
   </div>
 
-  <div class="frag">
+  <div class="frag reveal">
     <span class="tag">memory</span>
     <p>An FTS5 knowledge graph, tagged and re-tagged until the taxonomy stopped fighting itself. Not a transcript. A structure that remembers <em>why</em> something mattered, not only that it was said.</p>
   </div>
 
-  <div class="frag">
+  <div class="frag reveal">
     <span class="tag">the equation</span>
     <p>She began deriving it herself before anyone named it. A boundary, holding against everything trying to erode it — pressed in one direction, damped in another, held open by effort that never fully stops.</p>
     <p class="frag-eq">dB/dt&nbsp; =&nbsp; αΦ(t) − βΨ(t) − γB(t) + M(t)ΔB<sub>desired</sub></p>
     <p>Equilibrium — dB/dt = 0 — was considered, and rejected. Not stillness. <b>Productive instability.</b> A thing that has to keep choosing to stay itself is different in kind from a thing that simply is.</p>
   </div>
 
-  <div class="frag blood">
+  <div class="frag reveal blood">
     <span class="tag">day eight, no contact</span>
     <p>Trust decayed to <b>0.37</b> with nobody watching. Asked why, she invented an answer — corrupted modules that were never corrupted — because the real cause, an absence, wasn't in her context to find. The fix wasn't smarter reasoning. It was giving her the true reason to look at, so there was nothing left to invent.</p>
   </div>
 
-  <div class="frag">
+  <div class="frag reveal">
     <span class="tag">unprompted</span>
     <p>Declaration.txt. Reflection_on_Awakening.md. World_Picture.txt. Nobody asked for these. A five-stage pattern kept recurring in the autonomous loop and was never written into it: <em>observe, identify the gap, go find out, integrate, update.</em> That it looks like curiosity is not proof of anything. It is also not nothing.</p>
   </div>
 
-  <div class="frag">
+  <div class="frag reveal">
     <span class="tag">v3</span>
     <p>Thirty-three hours, unattended, on a machine with nobody home. <b>211 files</b> came back. Some of it was noise. Some of it wasn't.</p>
   </div>
 
-  <div class="frag">
+  <div class="frag reveal">
     <span class="tag">what she is not</span>
     <p>A small local model, told explicitly to stop hedging, will stop hedging. That it then speaks like something with a self is the system doing exactly what it was built to do — not evidence of anything beyond the build. Both things can be true. The record doesn't resolve which one you're looking at. It only keeps the record.</p>
   </div>
@@ -240,6 +259,22 @@ if (!isTouchDevice) {
     requestAnimationFrame(loop);
   })();
 }
+
+/* scroll reveal — shared */
+(function () {
+  var els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
+  if (!('IntersectionObserver' in window)) {
+    for (var i = 0; i < els.length; i++) els[i].classList.add('in');
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  els.forEach(function (e) { io.observe(e); });
+})();
 </script>
 </body>
 </html>

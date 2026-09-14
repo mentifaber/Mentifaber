@@ -87,6 +87,25 @@ footer{padding:100px 24px 80px}footer p{color:var(--dim);font-size:14.5px;max-wi
 h1,h2{font-family:'Playfair Display',serif!important;font-style:italic;}
 .eyebrow{font-family:'Syncopate',sans-serif!important;font-weight:400;}
 body{cursor:crosshair;}
+
+/* ── motion + media (shared) ── */
+.reveal { opacity: 0; transform: translateY(18px);
+  transition: opacity .9s cubic-bezier(.2,.7,.3,1), transform .9s cubic-bezier(.2,.7,.3,1); }
+.reveal.in { opacity: 1; transform: none; }
+.reveal.d1 { transition-delay: .07s; } .reveal.d2 { transition-delay: .14s; } .reveal.d3 { transition-delay: .21s; }
+.shot { margin: 3.6rem 0 0; }
+.shot img { width: 100%; display: block; background: #050403;
+  border: 1px solid rgba(200,169,110,.18); box-shadow: 0 18px 60px rgba(0,0,0,.75);
+  transition: border-color .5s ease, box-shadow .5s ease; }
+.shot:hover img { border-color: rgba(200,169,110,.4); box-shadow: 0 18px 70px rgba(0,0,0,.9), 0 0 40px rgba(200,169,110,.06); }
+.shot figcaption { margin-top: .95rem; font-family: 'EB Garamond', serif; font-style: italic;
+  font-size: .92rem; color: var(--nav); text-align: center; letter-spacing: .03em; }
+.shot-pair { display: grid; grid-template-columns: 1.55fr 1fr; gap: 1.3rem; align-items: start; }
+.shot-pair .shot { margin-top: 0; }
+@media (max-width: 700px) { .shot-pair { grid-template-columns: 1fr; gap: 2.2rem; } }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
 </style></head><body>
 <div class="mf-grain"></div>
 <div class="mf-vignette"></div>
@@ -126,10 +145,10 @@ body{cursor:crosshair;}
   <h2>Nodes that existed but <em>would not appear</em></h2>
   <p class="lede">Nodes were live on the mesh and visible on the handhelds, but the web interface showed nothing at all. Two separate faults in the MQTT path, stacked, both of which looked exactly like "the mesh is down."</p>
   <div class="grid">
-    <div class="card"><h4>Symptom</h4><p>Zero nodes in the interface while packets were visibly arriving and the handhelds showed a healthy neighbour count.</p></div>
-    <div class="card"><h4>Cause one</h4><p>Never subscribed to <b>msh/US/2/json/e/#</b>. The topic carrying node info simply wasn't in the subscription list.</p></div>
-    <div class="card"><h4>Cause two</h4><p>An <b>envelope-format decoding gap</b> — packets that did arrive were unwrapped incorrectly and dropped before they reached the node table.</p></div>
-    <div class="card"><h4>Lesson</h4><p>When the radios and the dashboard disagree, <b>the radios are right</b>. Debug the bridge, not the mesh.</p></div>
+    <div class="card reveal"><h4>Symptom</h4><p>Zero nodes in the interface while packets were visibly arriving and the handhelds showed a healthy neighbour count.</p></div>
+    <div class="card reveal d1"><h4>Cause one</h4><p>Never subscribed to <b>msh/US/2/json/e/#</b>. The topic carrying node info simply wasn't in the subscription list.</p></div>
+    <div class="card reveal d2"><h4>Cause two</h4><p>An <b>envelope-format decoding gap</b> — packets that did arrive were unwrapped incorrectly and dropped before they reached the node table.</p></div>
+    <div class="card reveal d3"><h4>Lesson</h4><p>When the radios and the dashboard disagree, <b>the radios are right</b>. Debug the bridge, not the mesh.</p></div>
   </div>
 </section>
 
@@ -140,10 +159,10 @@ body{cursor:crosshair;}
   <h2>The layer beneath <em>everything else</em></h2>
   <p class="lede">It shares a purpose with PyVarAC — communications that don't assume infrastructure — but at a different range and a different price.</p>
   <div class="grid">
-    <div class="card"><h4>HF · VARA</h4><p>Hundreds to thousands of miles. Needs a licence, a rig, an antenna, and a PC running a closed modem binary.</p></div>
-    <div class="card"><h4>LoRa · Meshtastic</h4><p>A few miles per hop, further with elevation. <b>No licence, $30 a node</b>, runs on a coin cell for days.</p></div>
-    <div class="card"><h4>Same UI shape</h4><p>Both landed on a browser front end over a local server, so the same tablet drives either backend. The launcher handles a <b>uv-managed Python</b> install and forced <code>--break-system-packages</code>.</p></div>
-    <div class="card"><h4>Same rule</h4><p>Nothing in the path may require the internet to be up. MQTT is a convenience, never a dependency.</p></div>
+    <div class="card reveal"><h4>HF · VARA</h4><p>Hundreds to thousands of miles. Needs a licence, a rig, an antenna, and a PC running a closed modem binary.</p></div>
+    <div class="card reveal d1"><h4>LoRa · Meshtastic</h4><p>A few miles per hop, further with elevation. <b>No licence, $30 a node</b>, runs on a coin cell for days.</p></div>
+    <div class="card reveal d2"><h4>Same UI shape</h4><p>Both landed on a browser front end over a local server, so the same tablet drives either backend. The launcher handles a <b>uv-managed Python</b> install and forced <code>--break-system-packages</code>.</p></div>
+    <div class="card reveal d3"><h4>Same rule</h4><p>Nothing in the path may require the internet to be up. MQTT is a convenience, never a dependency.</p></div>
   </div>
 </section>
 
@@ -305,6 +324,22 @@ document.querySelectorAll('.rv,.gap').forEach(e=>io.observe(e));
   if(touch){g.style.display='none';return}
   addEventListener('mousemove',function(e){tx=e.clientX;ty=e.clientY});
   (function loop(){cx+=(tx-cx)*.09;cy+=(ty-cy)*.09;g.style.left=cx+'px';g.style.top=cy+'px';requestAnimationFrame(loop)})();
+})();
+
+/* scroll reveal — shared */
+(function () {
+  var els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
+  if (!('IntersectionObserver' in window)) {
+    for (var i = 0; i < els.length; i++) els[i].classList.add('in');
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  els.forEach(function (e) { io.observe(e); });
 })();
 </script>
 </body></html>
