@@ -24,3 +24,7 @@ Static, no build step — every page is a single self-contained HTML file.
 - `sonicveil.html` — Sonic Veil
 
 Pages still in progress and intentionally not yet published: DeceasedCraft, Bedford, Anders.
+
+## Licence
+
+Proprietary. All rights reserved: see [LICENSE](LICENSE). No part of this repository may be copied, modified, hosted or redistributed without written permission from Anders Powell (Mentifaber).
